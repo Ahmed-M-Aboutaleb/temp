@@ -1,4 +1,5 @@
 import authentication
+import client
 print("Welcome to our freelancer system 👋")
 def main():
     print("Please select an option: ")
@@ -10,7 +11,7 @@ def main():
         if(role == "c"):
             print("Welcome freelancer " + name)
         else:
-            print("Welcome client " + name)
+            client.main()
     elif (option == "2"):
         authentication.register()
     else:
