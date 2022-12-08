@@ -9,9 +9,9 @@ def main():
     if(option == "1"):
         [id, name,role] = authentication.login()
         if(role == "c"):
-            print("Welcome freelancer " + name)
+            client.main(name)
         else:
-            client.main()
+            print("Welcome client " + name)
     elif (option == "2"):
         authentication.register()
     else:
