@@ -7,14 +7,19 @@ def main():
     print("2. Register")
     option = input()
     if(option == "1"):
-        [id, name,role] = authentication.login()
-        if(role == "c"):
-            client.main(name)
-        else:
-            print("Welcome client " + name)
+        [name,role] = authentication.login()
+        authed(name, role)
     elif (option == "2"):
-        authentication.register()
+        [name, role] = authentication.register()
+        authed(name, role)
     else:
         print("❌ | Invalid option")
 
-main()
+def authed(name, role):
+    if(role == "c"):
+        client.main(name)
+    else:
+        print("Welcome freelancer " + name)
+
+if __name__ == "__main__":
+    main()

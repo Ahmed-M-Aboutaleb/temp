@@ -1,4 +1,6 @@
 import uuid
+import os
+database = "database\\users"
 
 def validation(name, email, password, role  ):
     if(len(password) < 1 or len(email) < 1 or len(name) < 1 or len(role) < 1 or (role != "f" and role != "c")):
@@ -11,17 +13,19 @@ def login():
     name = input()
     print("Please enter your password: ")
     password = input()
-    fileName = "database/users/" + name + ".txt"
-    try:
-        file = open(fileName, "r")
-    except:
+    if not os.path.exists(database):
+        os.makedirs(database)
+
+    fileName = f"{database}\\{name}\\{name}.txt"
+    if not os.path.exists(fileName):
         print("❌ | User not found")
         return login()
-    with file:
+    else:
+        file = open(fileName, "r")
         user = file.readlines()
-        if password+"\n" == user[3]:
+        if password == user[3].split("\n")[0]:
             print("✅ | Login successful")
-            return [user[0], name, user[4]]
+            return [name, user[4]]
         else:
             print("❌ | Wrong password")
             return login()
@@ -37,23 +41,25 @@ def register():
     role = input()
     if(validation(name, email, password, role)):
         id= uuid.uuid4()
-        fileName = "database/users/" + name + ".txt"
-        try:
-            file = open(fileName, "r")
-            file.close()
-            print("❌ | User already exists")
-            return register()
-        except:
+        if not os.path.exists(database):
+            os.makedirs(database)
+        fileName = f"{database}\\{name}\\{name}.txt"
+        if not os.path.exists(fileName):
+            os.makedirs(f"{database}\\{name}")
             file = open(fileName, "w")
-            file.write(str(id) + "\n" + name + "\n" + email + "\n" + password + "\n" + role)
+            file.write(f"{str(id)}\n{name}\n{email}\n{password}\n{role}")
             file.close()
             print("✅ | Registration successful")
-        if role == "f":
-            try:
-                file = open("database/users/freelancers.txt", "a")
-                file.write(name + "\n")
-                file.close()
-            except:
-                file = open("database/users/freelancers.txt", "w")
-                file.write(name + "\n")
-                file.close()
+            if role == "f":
+                if not os.path.exists("database/users/freelancers.txt"):
+                    file = open("database/users/freelancers.txt", "w")
+                    file.write(name + "\n")
+                    file.close()
+                else:
+                    file = open("database/users/freelancers.txt", "a")
+                    file.write(name + "\n")
+                    file.close()
+            return [name, role]
+        else:
+            print("❌ | User already exists")
+            return register()
